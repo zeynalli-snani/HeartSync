@@ -1,7 +1,9 @@
 package com.heartsync.service;
 
 import com.heartsync.model.User;
+import com.heartsync.model.VenueSuggestion;
 import com.heartsync.repository.UserRepository;
+import com.heartsync.repository.VenueSuggestionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final VenueSuggestionRepository venueSuggestionRepository;
 
     public User getByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -37,5 +40,9 @@ public class UserService {
         User user = getById(id);
         user.setActive(true);
         userRepository.save(user);
+    }
+
+    public List<VenueSuggestion> getSuggestionsForUser(User user) {
+        return venueSuggestionRepository.findBySubmittedBy(user);
     }
 }

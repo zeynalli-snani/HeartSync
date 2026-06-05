@@ -44,4 +44,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Wishlist> wishlist;
+
+    @OneToMany(mappedBy = "submittedBy", cascade = CascadeType.ALL)
+    private List<VenueSuggestion> venueSuggestions;
 }
