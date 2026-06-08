@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head>
+    <title>Explore Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Explore Venues</h2>
+        <a th:href="@{/venues/suggest}" class="btn btn-outline-dark btn-sm">+ Suggest a Venue</a>
+    </div>
+
+    <div id="map"
+         th:data-venues="${#json.serialize(venues)}"
+         style="height: 550px; border-radius: 12px;">
+    </div>
+</div>
+
+<div layout:fragment="scripts">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script th:src="@{/js/map-explore.js}"></script>
+</div>
+</body>
+</html>

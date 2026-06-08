@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>My Wishlist</title></head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">My Wishlist</h2>
+    <div th:if="${wishlist.isEmpty()}" class="text-muted">No saved venues yet. Explore the map!</div>
+    <div class="row g-3">
+        <div class="col-md-4" th:each="entry : ${wishlist}">
+            <div class="card h-100">
+                <img th:src="${entry.venue.photoUrl}" class="card-img-top"
+                     style="height:160px;object-fit:cover"
+                     onerror="this.style.display='none'" alt="venue photo"/>
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${entry.venue.name}"></h5>
+                    <p class="text-muted small" th:text="${entry.venue.category}"></p>
+                    <p class="card-text small" th:text="${entry.venue.description}"></p>
+                    <form th:action="@{/wishlist/remove}" method="post">
+                        <input type="hidden" name="venueId" th:value="${entry.venue.id}"/>
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
