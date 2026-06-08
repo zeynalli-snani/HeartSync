@@ -14,14 +14,13 @@
     </div>
 
     <div id="map"
-         th:data-venues="${#json.serialize(venues)}"
+         th:attr="data-venues=${venuesJson}"
          style="height: 550px; border-radius: 12px;">
     </div>
 </div>
 
 <div layout:fragment="scripts">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
     <script th:src="@{/js/map-explore.js}"></script>
 </div>
 </body>

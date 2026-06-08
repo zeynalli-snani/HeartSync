@@ -1,6 +1,7 @@
 package com.heartsync.controller;
 
 import com.heartsync.model.User;
+import com.heartsync.model.Venue;
 import com.heartsync.service.UserService;
 import com.heartsync.service.VenueService;
 import com.heartsync.service.VenueSuggestionService;
@@ -10,6 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.ObjectMapper;
+
+import java.util.Map;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -25,8 +30,21 @@ public class VenueController {
     }
 
     @GetMapping("/map")
-    public String mapPage(Model model) {
-        model.addAttribute("venues", venueService.getAllVenues());
+    public String mapPage(Model model) throws Exception {
+        List<Venue> venues = venueService.getAllVenues();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String venuesJson = mapper.writeValueAsString(venues.stream().map(v -> Map.of(
+                "id", v.getId(),
+                "name", v.getName(),
+                "category", v.getCategory() != null ? v.getCategory() : "",
+                "description", v.getDescription() != null ? v.getDescription() : "",
+                "photoUrl", v.getPhotoUrl() != null ? v.getPhotoUrl() : "",
+                "latitude", v.getLatitude(),
+                "longitude", v.getLongitude()
+        )).toList());
+
+        model.addAttribute("venuesJson", venuesJson);
         return "venues/map";
     }
 
