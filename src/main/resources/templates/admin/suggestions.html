@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>Pending Suggestions</title></head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">Pending Venue Suggestions</h2>
+    <div th:if="${suggestions.isEmpty()}" class="text-muted">No pending suggestions.</div>
+    <table class="table table-bordered" th:unless="${suggestions.isEmpty()}">
+        <thead class="table-dark">
+        <tr>
+            <th>Name</th><th>Category</th><th>Submitted By</th><th>Date</th><th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${suggestions}">
+            <td th:text="${s.name}"></td>
+            <td th:text="${s.category}"></td>
+            <td th:text="${s.submittedBy.username}"></td>
+            <td th:text="${s.submittedAt}"></td>
+            <td>
+                <a th:href="@{/admin/suggestions/{id}/review(id=${s.id})}"
+                   class="btn btn-sm btn-outline-dark">Review</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

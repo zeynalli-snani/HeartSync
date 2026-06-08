@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>Admin Dashboard</title></head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">Admin Dashboard</h2>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h3 th:text="${userCount}"></h3>
+                <p class="text-muted">Total Users</p>
+                <a th:href="@{/admin/users}" class="btn btn-sm btn-outline-dark">Manage</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h3 th:text="${venueCount}"></h3>
+                <p class="text-muted">Total Venues</p>
+                <a th:href="@{/admin/venues}" class="btn btn-sm btn-outline-dark">Manage</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h3 th:text="${pendingCount}"></h3>
+                <p class="text-muted">Pending Suggestions</p>
+                <a th:href="@{/admin/suggestions}" class="btn btn-sm btn-outline-warning">Review</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

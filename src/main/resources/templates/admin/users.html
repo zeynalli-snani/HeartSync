@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>Manage Users</title></head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">Manage Users</h2>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th><th>Username</th><th>Email</th><th>Role</th><th>Status</th><th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.role}"></td>
+            <td>
+                <span th:if="${user.active}" class="badge bg-success">Active</span>
+                <span th:unless="${user.active}" class="badge bg-danger">Inactive</span>
+            </td>
+            <td>
+                <form th:if="${user.active}"
+                      th:action="@{/admin/users/{id}/deactivate(id=${user.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Deactivate</button>
+                </form>
+                <form th:unless="${user.active}"
+                      th:action="@{/admin/users/{id}/activate(id=${user.id})}" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-success">Activate</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

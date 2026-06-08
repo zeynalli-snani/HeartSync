@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>Manage Venues</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Manage Venues</h2>
+        <a th:href="@{/admin/venues/new}" class="btn btn-dark">+ Add Venue</a>
+    </div>
+    <table class="table table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th>Name</th><th>Category</th><th>Lat</th><th>Lng</th><th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="venue : ${venues}">
+            <td th:text="${venue.name}"></td>
+            <td th:text="${venue.category}"></td>
+            <td th:text="${venue.latitude}"></td>
+            <td th:text="${venue.longitude}"></td>
+            <td>
+                <a th:href="@{/admin/venues/{id}/edit(id=${venue.id})}"
+                   class="btn btn-sm btn-outline-dark">Edit</a>
+                <form th:action="@{/admin/venues/{id}/delete(id=${venue.id})}"
+                      method="post" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                            onclick="return confirm('Delete this venue?')">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

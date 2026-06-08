@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>Review Suggestion</title></head>
+<body>
+<div layout:fragment="content">
+    <h2 class="mb-4">Review Suggestion</h2>
+    <p class="text-muted">Submitted by <strong th:text="${suggestion.submittedBy.username}"></strong></p>
+
+    <form th:action="@{/admin/suggestions/{id}/update(id=${suggestion.id})}" method="post" class="mb-4">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" name="name" class="form-control" th:value="${suggestion.name}" required/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Category</label>
+            <input type="text" name="category" class="form-control" th:value="${suggestion.category}"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="3"
+                      th:text="${suggestion.description}"></textarea>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Photo URL</label>
+            <input type="text" name="photoUrl" class="form-control" th:value="${suggestion.photoUrl}"/>
+        </div>
+        <div class="row">
+            <div class="col mb-3">
+                <label class="form-label">Latitude</label>
+                <input type="number" step="any" name="latitude" class="form-control"
+                       th:value="${suggestion.latitude}" required/>
+            </div>
+            <div class="col mb-3">
+                <label class="form-label">Longitude</label>
+                <input type="number" step="any" name="longitude" class="form-control"
+                       th:value="${suggestion.longitude}" required/>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-dark">Save Changes</button>
+    </form>
+
+    <div class="d-flex gap-2">
+        <form th:action="@{/admin/suggestions/{id}/approve(id=${suggestion.id})}" method="post">
+            <button type="submit" class="btn btn-success">Approve & Publish</button>
+        </form>
+        <form th:action="@{/admin/suggestions/{id}/reject(id=${suggestion.id})}" method="post"
+              class="d-flex gap-2">
+            <input type="text" name="adminNote" class="form-control" placeholder="Rejection reason (optional)"/>
+            <button type="submit" class="btn btn-danger">Reject</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
