@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head><title>Plan Detail</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 th:text="${plan.title}"></h2>
+        <span th:if="${plan.completed}" class="badge bg-success fs-6">Completed</span>
+    </div>
+    <p class="text-muted" th:text="${plan.date}"></p>
+    <p th:text="${plan.description}"></p>
+
+    <div class="mb-4">
+        <h5>Partner</h5>
+        <div th:if="${plan.partner != null}">
+            <span class="badge bg-pink text-dark" th:text="${plan.partner.fullName}"></span>
+        </div>
+        <div th:if="${plan.partner == null and plan.owner.username == currentUser.username}">
+            <form th:action="@{/plans/{id}/partner(id=${plan.id})}" method="post" class="d-flex gap-2 mt-2">
+                <input type="text" name="partnerUsername" class="form-control w-auto" placeholder="Partner username"/>
+                <button type="submit" class="btn btn-sm btn-outline-dark">Invite</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <h5>Itinerary</h5>
+        <div th:if="${plan.stops.isEmpty()}" class="text-muted mb-2">No stops yet.</div>
+        <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between align-items-center"
+                th:each="stop : ${plan.stops}">
+                <span>
+                    <strong th:text="${stop.timeSlot}"></strong> —
+                    <span th:text="${stop.venue.name}"></span>
+                    <small class="text-muted" th:text="${stop.venue.category}"></small>
+                </span>
+                <form th:action="@{/plans/{id}/stops/{stopId}/remove(id=${plan.id},stopId=${stop.id})}"
+                      method="post">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                </form>
+            </li>
+        </ul>
+
+        <form th:action="@{/plans/{id}/stops/add(id=${plan.id})}" method="post" class="row g-2">
+            <div class="col-auto">
+                <select name="venueId" class="form-select">
+                    <option th:each="venue : ${venues}"
+                            th:value="${venue.id}"
+                            th:text="${venue.name}"></option>
+                </select>
+            </div>
+            <div class="col-auto">
+                <input type="time" name="timeSlot" class="form-control"/>
+            </div>
+            <div class="col-auto">
+                <input type="number" name="position" class="form-control" placeholder="Order" style="width:80px"/>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-dark">Add Stop</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mb-4" th:unless="${plan.completed}">
+        <form th:action="@{/plans/{id}/complete(id=${plan.id})}" method="post">
+            <button type="submit" class="btn btn-success">Mark as Completed</button>
+        </form>
+    </div>
+
+    <div th:if="${plan.completed}" class="mb-4">
+        <h5>Reflection</h5>
+        <div th:if="${reflection != null}">
+            <p><strong>Notes:</strong> <span th:text="${reflection.notes}"></span></p>
+            <p><strong>Rating:</strong> <span th:text="${reflection.rating}"></span> / 5</p>
+        </div>
+        <form th:action="@{/plans/{id}/reflection(id=${plan.id})}" method="post" th:if="${reflection == null}">
+            <div class="mb-2">
+                <textarea name="notes" class="form-control" rows="3" placeholder="How did it go?"></textarea>
+            </div>
+            <div class="mb-2">
+                <input type="number" name="rating" class="form-control w-auto"
+                       min="1" max="5" placeholder="Rating (1-5)"/>
+            </div>
+            <button type="submit" class="btn btn-outline-dark">Save Reflection</button>
+        </form>
+    </div>
+
+    <div th:if="${plan.owner.username == currentUser.username}">
+        <form th:action="@{/plans/{id}/delete(id=${plan.id})}" method="post">
+            <button type="submit" class="btn btn-outline-danger btn-sm"
+                    onclick="return confirm('Delete this plan?')">Delete Plan</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>My Plans</title></head>
+<body>
+<div layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>My Date Plans</h2>
+        <a th:href="@{/plans/new}" class="btn btn-dark">+ New Plan</a>
+    </div>
+    <div th:if="${plans.isEmpty()}" class="text-muted">No plans yet. Create your first one!</div>
+    <div class="row g-3">
+        <div class="col-md-4" th:each="plan : ${plans}">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${plan.title}"></h5>
+                    <p class="card-text text-muted" th:text="${plan.date}"></p>
+                    <p class="card-text" th:text="${plan.description}"></p>
+                    <span th:if="${plan.completed}" class="badge bg-success mb-2">Completed</span>
+                    <span th:unless="${plan.completed}" class="badge bg-secondary mb-2">Upcoming</span>
+                    <div>
+                        <a th:href="@{/plans/{id}(id=${plan.id})}" class="btn btn-sm btn-outline-dark">View</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
