@@ -34,20 +34,21 @@ public class VenueController {
         List<Venue> venues = venueService.getAllVenues();
 
         ObjectMapper mapper = new ObjectMapper();
-        String venuesJson = mapper.writeValueAsString(venues.stream().map(v -> Map.of(
-                "id", v.getId(),
-                "name", v.getName(),
-                "category", v.getCategory() != null ? v.getCategory() : "",
-                "description", v.getDescription() != null ? v.getDescription() : "",
-                "photoUrl", v.getPhotoUrl() != null ? v.getPhotoUrl() : "",
-                "latitude", v.getLatitude(),
-                "longitude", v.getLongitude()
-        )).toList());
+        String venuesJson = venues.isEmpty() ? "[]" : mapper.writeValueAsString(
+                venues.stream().map(v -> Map.of(
+                        "id", v.getId(),
+                        "name", v.getName() != null ? v.getName() : "",
+                        "category", v.getCategory() != null ? v.getCategory() : "",
+                        "description", v.getDescription() != null ? v.getDescription() : "",
+                        "photoUrl", v.getPhotoUrl() != null ? v.getPhotoUrl() : "",
+                        "latitude", v.getLatitude() != null ? v.getLatitude() : 0.0,
+                        "longitude", v.getLongitude() != null ? v.getLongitude() : 0.0
+                )).toList()
+        );
 
         model.addAttribute("venuesJson", venuesJson);
         return "venues/map";
     }
-
     @GetMapping("/venues/suggest")
     public String suggestPage() {
         return "venues/suggest";
