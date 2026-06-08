@@ -1,0 +1,22 @@
+body {
+    background-color: #f9f9f9;
+}
+
+.navbar-brand {
+    font-size: 1.3rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border-radius: 12px;
+}
+
+.btn-dark {
+    background-color: #1a1a1a;
+    border-color: #1a1a1a;
+}
+
+.btn-dark:hover {
+    background-color: #333;
+}
