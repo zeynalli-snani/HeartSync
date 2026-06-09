@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/base}" lang="en">
+<head>
+    <title>HeartSync — Plan dates you'll remember</title>
+    <link th:href="@{/css/heartsync-home.css}" rel="stylesheet" />
+</head>
+<body>
+<th:block layout:fragment="content">
+
+    <div class="hs-full-width-wrapper">
+
+        <section class="hs-hero">
+            <div class="hs-inner hs-hero-inner">
+                <p class="hs-eyebrow">Date planning, reimagined</p>
+                <h1 class="hs-headline">
+                    Plan dates<br>you'll both <span>remember.</span>
+                </h1>
+                <p class="hs-sub">
+                    Build itineraries, explore venues on a live map,
+                    and share plans with your partner — all in one place.
+                </p>
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/register}" class="hs-btn-primary">Get started free</a>
+                    <a th:href="@{/map}" class="hs-btn-ghost">Explore the map</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/plans}" class="hs-btn-primary">Go to my plans</a>
+                    <a th:href="@{/map}" class="hs-btn-ghost">Explore the map</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="hs-features">
+            <div class="hs-inner">
+                <p class="hs-features-label">Everything you need</p>
+                <h2 class="hs-features-title">One app for the whole date</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="hs-feature-card">
+                            <span class="hs-feature-icon">🗺️</span>
+                            <h5>Venue Map</h5>
+                            <p>Browse curated spots on an interactive map. Click any pin to see details and add it straight to your plan.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="hs-feature-card">
+                            <span class="hs-feature-icon">📋</span>
+                            <h5>Itinerary Builder</h5>
+                            <p>Build a full evening with ordered stops and time slots. Coffee at 5, dinner at 7, rooftop at 9.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="hs-feature-card">
+                            <span class="hs-feature-icon">💑</span>
+                            <h5>Shared Plans</h5>
+                            <p>Invite your partner to a plan so you're both on the same page — literally.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="hs-feature-card">
+                            <span class="hs-feature-icon">🔖</span>
+                            <h5>Wishlist</h5>
+                            <p>Save venues, you love before you're ready to plan. Build up a list of ideas for future dates.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="hs-feature-card">
+                            <span class="hs-feature-icon">⭐</span>
+                            <h5>Date Reflections</h5>
+                            <p>After a date, write a note and leave a rating. Over time you'll have a personal history of memories.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="hs-feature-card">
+                            <span class="hs-feature-icon">📍</span>
+                            <h5>Suggest Venues</h5>
+                            <p>Know a hidden gem? Submit it for review and help the community discover great spots.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="hs-cta">
+            <div class="hs-inner">
+                <h2>Ready to plan something special?</h2>
+                <p>It only takes a minute to get started.</p>
+                <div sec:authorize="!isAuthenticated()">
+                    <a th:href="@{/register}" class="hs-btn-primary">Create a free account</a>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/plans/new}" class="hs-btn-primary">Plan a new date</a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</th:block>
+</body>
+</html>
