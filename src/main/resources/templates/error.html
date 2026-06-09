@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>Something went wrong</title></head>
+<body>
+<th:block layout:fragment="content">
+  <div class="d-flex flex-column align-items-center justify-content-center text-center"
+       style="min-height: 60vh;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">💔</div>
+    <h1 class="fw-bold mb-2" th:text="${status != null ? status : '500'}"></h1>
+    <h4 class="text-muted mb-3" th:text="${error != null ? error : 'Something went wrong'}"></h4>
+    <p class="text-muted mb-4"
+       th:text="${message != null ? message : 'An unexpected error occurred. Please try again.'}"></p>
+    <div class="d-flex gap-2">
+      <a th:href="@{/}" class="btn btn-dark">Go Home</a>
+      <button onclick="history.back()" class="btn btn-outline-secondary">Go Back</button>
+    </div>
+  </div>
+</th:block>
+</body>
+</html>
