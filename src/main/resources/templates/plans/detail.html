@@ -25,43 +25,54 @@
         </div>
     </div>
 
-    <div class="mb-4">
-        <h5>Itinerary</h5>
-        <div th:if="${plan.stops.isEmpty()}" class="text-muted mb-2">No stops yet.</div>
-        <ul class="list-group mb-3">
-            <li class="list-group-item d-flex justify-content-between align-items-center"
-                th:each="stop : ${plan.stops}">
-                <span>
-                    <strong th:text="${stop.timeSlot}"></strong> —
-                    <span th:text="${stop.venue.name}"></span>
-                    <small class="text-muted" th:text="${stop.venue.category}"></small>
-                </span>
-                <form th:action="@{/plans/{id}/stops/{stopId}/remove(id=${plan.id},stopId=${stop.id})}"
-                      method="post">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-                </form>
-            </li>
-        </ul>
+    <ul class="list-group mb-3">
+        <li class="list-group-item d-flex justify-content-between align-items-center"
+            th:each="stop : ${plan.stops}">
+        <span>
+            <strong th:text="${stop.timeSlot}"></strong> —
+            <span th:if="${stop.venue != null}" th:text="${stop.venue.name}"></span>
+            <span th:if="${stop.venue == null}" th:text="${stop.customVenueName}"></span>
+            <small class="text-muted ms-1"
+                   th:if="${stop.venue != null}"
+                   th:text="${stop.venue.category}"></small>
+        </span>
+            <form th:action="@{/plans/{id}/stops/{stopId}/remove(id=${plan.id},stopId=${stop.id})}"
+                  method="post">
+                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+            </form>
+        </li>
+    </ul>
 
-        <form th:action="@{/plans/{id}/stops/add(id=${plan.id})}" method="post" class="row g-2">
-            <div class="col-auto">
-                <select name="venueId" class="form-select">
-                    <option th:each="venue : ${venues}"
-                            th:value="${venue.id}"
-                            th:text="${venue.name}"></option>
-                </select>
-            </div>
-            <div class="col-auto">
-                <input type="time" name="timeSlot" class="form-control"/>
-            </div>
-            <div class="col-auto">
-                <input type="number" name="position" class="form-control" placeholder="Order" style="width:80px"/>
-            </div>
-            <div class="col-auto">
-                <button type="submit" class="btn btn-outline-dark">Add Stop</button>
-            </div>
-        </form>
-    </div>
+    <p class="fw-semibold mb-1">Add from venue catalog</p>
+    <form th:action="@{/plans/{id}/stops/add(id=${plan.id})}" method="post" class="row g-2 mb-3">
+        <div class="col-auto">
+            <select name="venueId" class="form-select">
+                <option th:each="venue : ${venues}"
+                        th:value="${venue.id}"
+                        th:text="${venue.name}"></option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <input type="time" name="timeSlot" class="form-control"/>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-dark">Add</button>
+        </div>
+    </form>
+
+    <p class="fw-semibold mb-1">Or add a custom spot</p>
+    <form th:action="@{/plans/{id}/stops/add-custom(id=${plan.id})}" method="post" class="row g-2">
+        <div class="col-auto">
+            <input type="text" name="customVenueName" class="form-control"
+                   placeholder="e.g. Grandma's house"/>
+        </div>
+        <div class="col-auto">
+            <input type="time" name="timeSlot" class="form-control"/>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-dark">Add</button>
+        </div>
+    </form>
 
     <div class="mb-4" th:unless="${plan.completed}">
         <form th:action="@{/plans/{id}/complete(id=${plan.id})}" method="post">

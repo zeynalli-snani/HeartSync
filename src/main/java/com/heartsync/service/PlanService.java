@@ -48,7 +48,7 @@ public class PlanService {
         planRepository.save(plan);
     }
 
-    public void addStop(Long planId, Long venueId, String timeSlot, Integer position) {
+    public void addStop(Long planId, Long venueId, String timeSlot) {
         Plan plan = getById(planId);
         Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new RuntimeException("Venue not found: " + venueId));
@@ -57,7 +57,18 @@ public class PlanService {
                 .plan(plan)
                 .venue(venue)
                 .timeSlot(java.time.LocalTime.parse(timeSlot))
-                .position(position)
+                .build();
+
+        stopRepository.save(stop);
+    }
+
+    public void addCustomStop(Long planId, String customVenueName, String timeSlot) {
+        Plan plan = getById(planId);
+
+        Stop stop = Stop.builder()
+                .plan(plan)
+                .customVenueName(customVenueName)
+                .timeSlot(java.time.LocalTime.parse(timeSlot))
                 .build();
 
         stopRepository.save(stop);

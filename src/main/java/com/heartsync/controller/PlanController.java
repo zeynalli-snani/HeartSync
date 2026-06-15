@@ -71,9 +71,16 @@ public class PlanController {
     @PostMapping("/{id}/stops/add")
     public String addStop(@PathVariable Long id,
                           @RequestParam Long venueId,
-                          @RequestParam String timeSlot,
-                          @RequestParam Integer position) {
-        planService.addStop(id, venueId, timeSlot, position);
+                          @RequestParam String timeSlot) {
+        planService.addStop(id, venueId, timeSlot);
+        return "redirect:/plans/" + id;
+    }
+
+    @PostMapping("/{id}/stops/add-custom")
+    public String addCustomStop(@PathVariable Long id,
+                                @RequestParam String customVenueName,
+                                @RequestParam String timeSlot) {
+        planService.addCustomStop(id, customVenueName, timeSlot);
         return "redirect:/plans/" + id;
     }
 

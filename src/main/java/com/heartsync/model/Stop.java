@@ -20,13 +20,14 @@ public class Stop {
     @Column(name = "time_slot")
     private LocalTime timeSlot;
 
-    private Integer position;
-
     @ManyToOne
     @JoinColumn(name = "plan_id", nullable = false)
     private Plan plan;
 
+    @Column(name = "custom_venue_name")
+    private String customVenueName;
+
     @ManyToOne
-    @JoinColumn(name = "venue_id", nullable = false)
+    @JoinColumn(name = "venue_id")
     private Venue venue;
 }
