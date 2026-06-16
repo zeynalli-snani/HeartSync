@@ -1,5 +1,6 @@
 package com.heartsync.service;
 
+import com.heartsync.exception.ResourceNotFoundException;
 import com.heartsync.model.User;
 import com.heartsync.model.VenueSuggestion;
 import com.heartsync.repository.UserRepository;
@@ -18,12 +19,12 @@ public class UserService {
 
     public User getByUsername(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + username));
     }
 
     public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     public List<User> getAllUsers() {

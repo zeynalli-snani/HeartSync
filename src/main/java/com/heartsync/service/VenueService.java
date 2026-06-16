@@ -1,5 +1,6 @@
 package com.heartsync.service;
 
+import com.heartsync.exception.ResourceNotFoundException;
 import com.heartsync.model.Venue;
 import com.heartsync.repository.VenueRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class VenueService {
 
     public Venue getById(Long id) {
         return venueRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Venue not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
     }
 
     public List<Venue> getByCategory(String category) {

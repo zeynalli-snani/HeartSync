@@ -1,5 +1,6 @@
 package com.heartsync.service;
 
+import com.heartsync.exception.ResourceNotFoundException;
 import com.heartsync.model.*;
 import com.heartsync.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,10 @@ public class ReflectionService {
 
     public void saveReflection(Long planId, String notes, Integer rating) {
         Plan plan = planRepository.findById(planId)
-                .orElseThrow(() -> new RuntimeException("Plan not found: " + planId));
+                .orElseThrow(() -> new ResourceNotFoundException("Plan not found."));
 
         Reflection reflection = reflectionRepository.findByPlan(plan)
                 .orElse(Reflection.builder().plan(plan).build());
-
         reflection.setNotes(notes);
         reflection.setRating(rating);
         reflectionRepository.save(reflection);

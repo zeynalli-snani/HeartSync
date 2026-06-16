@@ -1,5 +1,6 @@
 package com.heartsync.service;
 
+import com.heartsync.exception.ResourceNotFoundException;
 import com.heartsync.model.*;
 import com.heartsync.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class VenueSuggestionService {
 
     public VenueSuggestion getById(Long id) {
         return suggestionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Suggestion not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Suggestion not found"));
     }
 
     public List<VenueSuggestion> getByUser(User user) {

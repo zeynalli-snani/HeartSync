@@ -5,6 +5,10 @@ import com.heartsync.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.heartsync.exception.InvalidInputException;
+import com.heartsync.exception.ResourceNotFoundException;
+
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -26,7 +30,7 @@ public class PlanService {
 
     public Plan getById(Long id) {
         return planRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Plan not found: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Plan not found."));
     }
 
     public Plan create(String title, String description, LocalDate date, User owner) {
@@ -43,34 +47,43 @@ public class PlanService {
     public void addPartner(Long planId, String partnerUsername) {
         Plan plan = getById(planId);
         User partner = userRepository.findByUsername(partnerUsername)
-                .orElseThrow(() -> new RuntimeException("User not found: " + partnerUsername));
+                .orElseThrow(() -> new ResourceNotFoundException("No user found with username: " + partnerUsername));
         plan.setPartner(partner);
         planRepository.save(plan);
     }
 
     public void addStop(Long planId, Long venueId, String timeSlot) {
+        if (timeSlot == null || timeSlot.isBlank()) {
+            throw new InvalidInputException("Please select a time for the stop.");
+        }
+
         Plan plan = getById(planId);
         Venue venue = venueRepository.findById(venueId)
-                .orElseThrow(() -> new RuntimeException("Venue not found: " + venueId));
+                .orElseThrow(() -> new ResourceNotFoundException("Venue not found."));
 
         Stop stop = Stop.builder()
                 .plan(plan)
                 .venue(venue)
                 .timeSlot(java.time.LocalTime.parse(timeSlot))
                 .build();
-
         stopRepository.save(stop);
     }
 
     public void addCustomStop(Long planId, String customVenueName, String timeSlot) {
-        Plan plan = getById(planId);
+        if (timeSlot == null || timeSlot.isBlank()) {
+            throw new InvalidInputException("Please select a time for the stop.");
+        }
 
+        if (customVenueName == null || customVenueName.isBlank()) {
+            throw new InvalidInputException("Please enter a name for the custom spot.");
+        }
+
+        Plan plan = getById(planId);
         Stop stop = Stop.builder()
                 .plan(plan)
                 .customVenueName(customVenueName)
                 .timeSlot(java.time.LocalTime.parse(timeSlot))
                 .build();
-
         stopRepository.save(stop);
     }
 
