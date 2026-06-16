@@ -23,7 +23,7 @@
                     and share plans with your partner — all in one place.
                 </p>
                 <div sec:authorize="!isAuthenticated()">
-                    <a th:href="@{/register}" class="hs-btn-primary">Get started free</a>
+                    <a th:href="@{/register}" class="hs-btn-primary">Get started</a>
                     <a th:href="@{/map}" class="hs-btn-ghost">Explore the map</a>
                 </div>
                 <div sec:authorize="isAuthenticated()">

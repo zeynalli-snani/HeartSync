@@ -1,5 +1,14 @@
 /* global L */
 
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="_csrf"]');
+    const header = document.querySelector('meta[name="_csrf_header"]');
+    return {
+        token: meta ? meta.getAttribute('content') : '',
+        header: header ? header.getAttribute('content') : ''
+    };
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const mapElement = document.getElementById('map');
     if (!mapElement) return;
@@ -25,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 function createPopupMarkup(venue) {
+    const csrf = getCsrfToken();
     const imageAlt = venue.name ? venue.name.replace(/"/g, '&quot;') : 'Venue image';
 
     const imageHtml = venue.photoUrl
@@ -38,6 +48,7 @@ function createPopupMarkup(venue) {
             <p style="font-size:13px; margin: 4px 0;">${venue.description || ''}</p>
             ${imageHtml}
             <form action="/wishlist/add" method="post">
+                <input type="hidden" name="_csrf" value="${csrf.token}"/>
                 <input type="hidden" name="venueId" value="${venue.id || ''}"/>
                 <button class="btn btn-sm btn-outline-dark w-100">Save to Wishlist</button>
             </form>
