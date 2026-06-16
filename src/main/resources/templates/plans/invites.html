@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}" lang="">
+<head><title>My Invites</title></head>
+<body>
+<th:block layout:fragment="content">
+  <h2 class="mb-4">Pending Invites</h2>
+
+  <div th:if="${invites.isEmpty()}" class="text-muted">
+    No pending invites right now.
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-5" th:each="invite : ${invites}">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${invite.plan.title}"></h5>
+          <p class="text-muted small mb-1">
+            Planned for <span th:text="${invite.plan.date}"></span>
+          </p>
+          <p class="text-muted small mb-3">
+            Invited by <strong th:text="${invite.plan.owner.fullName}"></strong>
+          </p>
+          <div class="d-flex gap-2">
+            <form th:action="@{/plans/invites/{id}/accept(id=${invite.id})}" method="post">
+              <button type="submit" class="btn btn-sm btn-success">Accept</button>
+            </form>
+            <form th:action="@{/plans/invites/{id}/reject(id=${invite.id})}" method="post">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</th:block>
+</body>
+</html>

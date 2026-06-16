@@ -5,6 +5,9 @@
 <head><title>Plan Detail</title></head>
 <body>
 <div layout:fragment="content">
+    <div class="mb-3">
+        <a th:href="@{/plans}" class="btn btn-outline-secondary btn-sm">← Back to Plans</a>
+    </div>
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 th:text="${plan.title}"></h2>
         <span th:if="${plan.completed}" class="badge bg-success fs-6">Completed</span>
@@ -14,14 +17,29 @@
 
     <div class="mb-4">
         <h5>Partner</h5>
+
         <div th:if="${plan.partner != null}">
-            <span class="badge bg-pink text-dark" th:text="${plan.partner.fullName}"></span>
-        </div>
-        <div th:if="${plan.partner == null and plan.owner.username == currentUser.username}">
-            <form th:action="@{/plans/{id}/partner(id=${plan.id})}" method="post" class="d-flex gap-2 mt-2">
-                <input type="text" name="partnerUsername" class="form-control w-auto" placeholder="Partner username"/>
-                <button type="submit" class="btn btn-sm btn-outline-dark">Invite</button>
+        <span class="badge bg-danger text-white fs-6"
+              th:text="${plan.partner.fullName}"></span>
+            <form th:if="${plan.partner.username == currentUser.username}"
+                  th:action="@{/plans/{id}/leave(id=${plan.id})}"
+                  method="post" class="d-inline ms-2">
+                <button type="submit" class="btn btn-sm btn-outline-danger"
+                        onclick="return confirm('Leave this plan?')">Leave plan</button>
             </form>
+        </div>
+
+        <div th:if="${plan.partner == null and plan.owner.username == currentUser.username}">
+            <form th:action="@{/plans/{id}/invite(id=${plan.id})}" method="post"
+                  class="d-flex gap-2 mt-2">
+                <input type="text" name="partnerUsername" class="form-control w-auto"
+                       placeholder="Enter username to invite"/>
+                <button type="submit" class="btn btn-sm btn-outline-dark">Send Invite</button>
+            </form>
+        </div>
+
+        <div th:if="${plan.partner == null and plan.owner.username != currentUser.username}">
+            <span class="text-muted small">No partner yet.</span>
         </div>
     </div>
 
@@ -64,7 +82,7 @@
     <form th:action="@{/plans/{id}/stops/add-custom(id=${plan.id})}" method="post" class="row g-2">
         <div class="col-auto">
             <input type="text" name="customVenueName" class="form-control"
-                   placeholder="e.g. Grandma's house"/>
+                   placeholder="e.g. Zefer Parki"/>
         </div>
         <div class="col-auto">
             <input type="time" name="timeSlot" class="form-control"/>

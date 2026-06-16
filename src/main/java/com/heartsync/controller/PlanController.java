@@ -2,10 +2,7 @@ package com.heartsync.controller;
 
 import com.heartsync.model.Plan;
 import com.heartsync.model.User;
-import com.heartsync.service.PlanService;
-import com.heartsync.service.ReflectionService;
-import com.heartsync.service.UserService;
-import com.heartsync.service.VenueService;
+import com.heartsync.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -23,6 +20,7 @@ public class PlanController {
     private final UserService userService;
     private final VenueService venueService;
     private final ReflectionService reflectionService;
+    private final PlanInviteService planInviteService;
 
     private User getCurrentUser(Authentication auth) {
         return userService.getByUsername(auth.getName());
@@ -66,6 +64,43 @@ public class PlanController {
                              @RequestParam String partnerUsername) {
         planService.addPartner(id, partnerUsername);
         return "redirect:/plans/" + id;
+    }
+
+    @PostMapping("/{id}/invite")
+    public String sendInvite(@PathVariable Long id,
+                             @RequestParam String partnerUsername,
+                             Authentication auth) {
+        User user = getCurrentUser(auth);
+        planInviteService.sendInvite(id, partnerUsername, user);
+        return "redirect:/plans/" + id;
+    }
+
+    @PostMapping("/{id}/leave")
+    public String leavePlan(@PathVariable Long id, Authentication auth) {
+        User user = getCurrentUser(auth);
+        planInviteService.leaveplan(id, user);
+        return "redirect:/plans";
+    }
+
+    @GetMapping("/invites")
+    public String viewInvites(Authentication auth, Model model) {
+        User user = getCurrentUser(auth);
+        model.addAttribute("invites", planInviteService.getPendingInvitesForUser(user));
+        return "plans/invites";
+    }
+
+    @PostMapping("/invites/{inviteId}/accept")
+    public String acceptInvite(@PathVariable Long inviteId, Authentication auth) {
+        User user = getCurrentUser(auth);
+        planInviteService.acceptInvite(inviteId, user);
+        return "redirect:/plans";
+    }
+
+    @PostMapping("/invites/{inviteId}/reject")
+    public String rejectInvite(@PathVariable Long inviteId, Authentication auth) {
+        User user = getCurrentUser(auth);
+        planInviteService.rejectInvite(inviteId, user);
+        return "redirect:/plans/invites";
     }
 
     @PostMapping("/{id}/stops/add")
