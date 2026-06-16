@@ -41,4 +41,7 @@ public class Plan {
 
     @OneToOne(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     private Reflection reflection;
+
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlanInvite> invites;
 }

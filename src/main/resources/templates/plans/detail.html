@@ -19,8 +19,10 @@
         <h5>Partner</h5>
 
         <div th:if="${plan.partner != null}">
-        <span class="badge bg-danger text-white fs-6"
-              th:text="${plan.partner.fullName}"></span>
+            <span class="badge bg-danger text-white fs-6"
+                  th:text="${plan.partner.username == currentUser.username ? plan.owner.fullName : plan.partner.fullName}">
+        </span>
+
             <form th:if="${plan.partner.username == currentUser.username}"
                   th:action="@{/plans/{id}/leave(id=${plan.id})}"
                   method="post" class="d-inline ms-2">
@@ -29,17 +31,36 @@
             </form>
         </div>
 
-        <div th:if="${plan.partner == null and plan.owner.username == currentUser.username}">
-            <form th:action="@{/plans/{id}/invite(id=${plan.id})}" method="post"
-                  class="d-flex gap-2 mt-2">
-                <input type="text" name="partnerUsername" class="form-control w-auto"
-                       placeholder="Enter username to invite"/>
-                <button type="submit" class="btn btn-sm btn-outline-dark">Send Invite</button>
-            </form>
-        </div>
+        <div th:if="${plan.partner == null}">
 
-        <div th:if="${plan.partner == null and plan.owner.username != currentUser.username}">
-            <span class="text-muted small">No partner yet.</span>
+            <div th:if="${plan.owner.username == currentUser.username}">
+
+                <div th:if="${pendingInvite != null and pendingInvite.status.name() == 'PENDING'}"
+                     class="text-muted small mb-2">
+                    Invite sent to
+                    <strong th:text="${pendingInvite.invitedUser.username}"></strong>
+                    — waiting for response
+                </div>
+
+                <div th:if="${pendingInvite != null and pendingInvite.status.name() == 'REJECTED'}"
+                     class="text-warning small mb-2">
+                    Your invite to
+                    <strong th:text="${pendingInvite.invitedUser.username}"></strong>
+                    was rejected. You can invite someone else.
+                </div>
+
+                <form th:if="${pendingInvite == null or pendingInvite.status.name() == 'REJECTED'}"
+                      th:action="@{/plans/{id}/invite(id=${plan.id})}" method="post"
+                      class="d-flex gap-2 mt-2">
+                    <input type="text" name="partnerUsername" class="form-control w-auto"
+                           placeholder="Enter username to invite"/>
+                    <button type="submit" class="btn btn-sm btn-outline-dark">Send Invite</button>
+                </form>
+            </div>
+
+            <div th:if="${plan.owner.username != currentUser.username}">
+                <span class="text-muted small">No partner yet.</span>
+            </div>
         </div>
     </div>
 

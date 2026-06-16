@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface PlanInviteRepository extends JpaRepository<PlanInvite, Long> {
     List<PlanInvite> findByInvitedUserAndStatus(User user, InviteStatus status);
     Optional<PlanInvite> findByPlanAndInvitedUser(Plan plan, User user);
+    Optional<PlanInvite> findTopByPlanOrderBySentAtDesc(Plan plan);
     boolean existsByPlanAndInvitedUserAndStatus(Plan plan, User user, InviteStatus status);
 }

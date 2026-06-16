@@ -49,6 +49,11 @@ public class PlanInviteService {
         inviteRepository.save(invite);
     }
 
+    public PlanInvite getLatestInviteForPlan(Plan plan) {
+        return inviteRepository.findTopByPlanOrderBySentAtDesc(plan)
+                .orElse(null);
+    }
+
     public List<PlanInvite> getPendingInvitesForUser(User user) {
         return inviteRepository.findByInvitedUserAndStatus(user, InviteStatus.PENDING);
     }

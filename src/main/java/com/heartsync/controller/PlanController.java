@@ -56,6 +56,7 @@ public class PlanController {
         model.addAttribute("venues", venueService.getAllVenues());
         model.addAttribute("reflection", reflectionService.getByPlan(plan));
         model.addAttribute("currentUser", user);
+        model.addAttribute("pendingInvite", planInviteService.getLatestInviteForPlan(plan));
         return "plans/detail";
     }
 
