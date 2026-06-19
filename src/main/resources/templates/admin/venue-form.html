@@ -16,8 +16,14 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Category</label>
-                    <input type="text" name="category" class="form-control"
-                           th:value="${venue?.category}"/>
+                    <select name="category" class="form-select">
+                        <option value="">-- Select category --</option>
+                        <option th:each="cat : ${categories}"
+                                th:value="${cat.name()}"
+                                th:text="${cat.label}"
+                                th:selected="${venue != null and venue.category == cat}">
+                        </option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Description</label>

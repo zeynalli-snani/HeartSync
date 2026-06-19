@@ -1,6 +1,7 @@
 package com.heartsync.controller;
 
 import com.heartsync.model.Venue;
+import com.heartsync.model.VenueCategory;
 import com.heartsync.model.VenueSuggestion;
 import com.heartsync.service.FileUploadService;
 import com.heartsync.service.UserService;
@@ -55,7 +56,8 @@ public class AdminController {
     }
 
     @GetMapping("/venues/new")
-    public String newVenuePage() {
+    public String newVenuePage(Model model) {
+        model.addAttribute("categories", VenueCategory.values());
         return "admin/venue-form";
     }
 
@@ -75,6 +77,7 @@ public class AdminController {
     @GetMapping("/venues/{id}/edit")
     public String editVenuePage(@PathVariable Long id, Model model) {
         model.addAttribute("venue", venueService.getById(id));
+        model.addAttribute("categories", VenueCategory.values());
         return "admin/venue-form";
     }
 
@@ -90,7 +93,7 @@ public class AdminController {
         Venue venue = venueService.getById(id);
         venue.setName(name);
         venue.setDescription(description);
-        venue.setCategory(category);
+        venue.setCategory(VenueCategory.valueOf(category));
 
         if (photoFile != null && !photoFile.isEmpty()) {
             venue.setPhotoUrl(fileUploadService.store(photoFile));
@@ -117,6 +120,7 @@ public class AdminController {
     @GetMapping("/suggestions/{id}/review")
     public String reviewSuggestion(@PathVariable Long id, Model model) {
         model.addAttribute("suggestion", suggestionService.getById(id));
+        model.addAttribute("categories", VenueCategory.values());
         return "admin/suggestion-review";
     }
 
@@ -124,8 +128,9 @@ public class AdminController {
     public String updateSuggestion(@PathVariable Long id,
                                    @RequestParam String name,
                                    @RequestParam String description,
-                                   @RequestParam String category,
-                                   @RequestParam String photoUrl,
+                                   @RequestParam(required = false) String category,
+                                   @RequestParam(required = false) String photoUrl,
+                                   @RequestParam(required = false) MultipartFile photoFile,
                                    @RequestParam Double latitude,
                                    @RequestParam Double longitude) {
         suggestionService.update(id, name, description, category, photoUrl, latitude, longitude);

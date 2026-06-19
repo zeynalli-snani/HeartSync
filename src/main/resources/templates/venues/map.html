@@ -5,6 +5,20 @@
 <head>
     <title>Explore Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        .category-btn {
+            border-radius: 20px;
+            font-size: 0.8rem;
+            padding: 4px 14px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+        .category-btn.inactive {
+            opacity: 0.35;
+        }
+    </style>
 </head>
 <body>
 <th:block layout:fragment="content">
@@ -12,9 +26,24 @@
         <h2>Explore Venues</h2>
         <a th:href="@{/venues/suggest}" class="btn btn-outline-dark btn-sm">+ Suggest a Venue</a>
     </div>
+
+    <!-- Category filters -->
+    <div class="d-flex flex-wrap gap-2 mb-3" id="category-filters">
+        <button class="category-btn"
+                style="background-color: #1a1a1a; color: white; border-color: #1a1a1a;"
+                onclick="showAll(this)">All</button>
+        <button th:each="cat : ${categories}"
+                class="category-btn"
+                th:attr="data-category=${cat.label},
+                         style='background-color: ' + ${cat.color} + '; color: white; border-color: ' + ${cat.color} + ';'"
+                th:text="${cat.label}"
+                onclick="filterByCategory(this)">
+        </button>
+    </div>
+
     <div id="map"
          th:attr="data-venues=${venuesJson}"
-         style="height: 550px; border-radius: 12px;">
+         style="height: 540px; border-radius: 12px;">
     </div>
 </th:block>
 

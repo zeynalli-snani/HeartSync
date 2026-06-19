@@ -60,7 +60,6 @@ public class VenueSuggestionService {
     // opening the suggestion to review and edit
     public VenueSuggestion update(Long id, String name, String description, String category,
                                   String photoUrl, Double latitude, Double longitude) {
-
         VenueSuggestion suggestion = getById(id);
         suggestion.setName(name);
         suggestion.setDescription(description);
@@ -75,17 +74,25 @@ public class VenueSuggestionService {
     public void approve(Long id) {
         VenueSuggestion suggestion = getById(id);
 
+        VenueCategory venueCategory = null;
+        if (suggestion.getCategory() != null && !suggestion.getCategory().isBlank()) {
+            try {
+                venueCategory = VenueCategory.valueOf(suggestion.getCategory());
+            } catch (IllegalArgumentException e) {
+                venueCategory = VenueCategory.OTHER;
+            }
+        }
+
         Venue venue = Venue.builder()
                 .name(suggestion.getName())
                 .description(suggestion.getDescription())
-                .category(suggestion.getCategory())
+                .category(venueCategory)
                 .photoUrl(suggestion.getPhotoUrl())
                 .latitude(suggestion.getLatitude())
                 .longitude(suggestion.getLongitude())
                 .build();
 
         venueRepository.save(venue);
-
         suggestion.setStatus(SuggestionStatus.APPROVED);
         suggestionRepository.save(suggestion);
     }

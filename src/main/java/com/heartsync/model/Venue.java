@@ -22,7 +22,8 @@ public class Venue {
 
     private String description;
 
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private VenueCategory category;
 
     @Column(name = "photo_url")
     private String photoUrl;

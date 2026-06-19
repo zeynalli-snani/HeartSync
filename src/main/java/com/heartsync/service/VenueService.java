@@ -2,6 +2,7 @@ package com.heartsync.service;
 
 import com.heartsync.exception.ResourceNotFoundException;
 import com.heartsync.model.Venue;
+import com.heartsync.model.VenueCategory;
 import com.heartsync.repository.VenueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class VenueService {
         Venue venue = Venue.builder()
                 .name(name)
                 .description(description)
-                .category(category)
+                .category(VenueCategory.valueOf(category))
                 .photoUrl(finalPhotoUrl)
                 .latitude(latitude)
                 .longitude(longitude)

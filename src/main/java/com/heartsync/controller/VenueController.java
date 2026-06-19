@@ -2,6 +2,7 @@ package com.heartsync.controller;
 
 import com.heartsync.model.User;
 import com.heartsync.model.Venue;
+import com.heartsync.model.VenueCategory;
 import com.heartsync.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -34,20 +35,27 @@ public class VenueController {
 
         ObjectMapper mapper = new ObjectMapper();
         String venuesJson = venues.isEmpty() ? "[]" : mapper.writeValueAsString(
-                venues.stream().map(v -> Map.of(
-                        "id", v.getId(),
-                        "name", v.getName() != null ? v.getName() : "",
-                        "category", v.getCategory() != null ? v.getCategory() : "",
-                        "description", v.getDescription() != null ? v.getDescription() : "",
-                        "photoUrl", v.getPhotoUrl() != null ? v.getPhotoUrl() : "",
-                        "latitude", v.getLatitude() != null ? v.getLatitude() : 0.0,
-                        "longitude", v.getLongitude() != null ? v.getLongitude() : 0.0
-                )).toList()
+                venues.stream().map(v -> {
+                    String categoryLabel = v.getCategory() != null ? v.getCategory().getLabel() : "Other";
+                    String categoryColor = v.getCategory() != null ? v.getCategory().getColor() : "#6b7280";
+                    return Map.of(
+                            "id", v.getId(),
+                            "name", v.getName() != null ? v.getName() : "",
+                            "category", categoryLabel,
+                            "color", categoryColor,
+                            "description", v.getDescription() != null ? v.getDescription() : "",
+                            "photoUrl", v.getPhotoUrl() != null ? v.getPhotoUrl() : "",
+                            "latitude", v.getLatitude() != null ? v.getLatitude() : 0.0,
+                            "longitude", v.getLongitude() != null ? v.getLongitude() : 0.0
+                    );
+                }).toList()
         );
 
         model.addAttribute("venuesJson", venuesJson);
+        model.addAttribute("categories", VenueCategory.values());
         return "venues/map";
     }
+
     @GetMapping("/venues/suggest")
     public String suggestPage() {
         return "venues/suggest";
