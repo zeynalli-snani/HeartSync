@@ -5,6 +5,7 @@ import com.heartsync.model.*;
 import com.heartsync.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,13 +17,20 @@ public class VenueSuggestionService {
     private final VenueRepository venueRepository;
 
     public void submit(String name, String description, String category,
-                       String photoUrl, Double latitude, Double longitude, User submittedBy) {
+                       String photoUrl, MultipartFile photoFile,
+                       Double latitude, Double longitude,
+                       User submittedBy, FileUploadService fileUploadService) {
+
+        String finalPhotoUrl = photoUrl;
+        if (photoFile != null && !photoFile.isEmpty()) {
+            finalPhotoUrl = fileUploadService.store(photoFile);
+        }
 
         VenueSuggestion suggestion = VenueSuggestion.builder()
                 .name(name)
                 .description(description)
                 .category(category)
-                .photoUrl(photoUrl)
+                .photoUrl(finalPhotoUrl)
                 .latitude(latitude)
                 .longitude(longitude)
                 .submittedBy(submittedBy)

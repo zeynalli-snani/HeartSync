@@ -8,7 +8,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <h2 class="mb-4" th:text="${venue != null} ? 'Edit Venue' : 'Add Venue'"></h2>
-            <form th:action="@{${venue != null ? '/admin/venues/' + venue.id + '/edit' : '/admin/venues/new'}}" method="post">
+            <form th:action="@{${venue != null ? '/admin/venues/' + venue.id + '/edit' : '/admin/venues/new'}}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                     <label class="form-label">Name</label>
                     <input type="text" name="name" class="form-control"
@@ -25,9 +25,20 @@
                               rows="3" th:text="${venue?.description}"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Photo URL</label>
+                    <label class="form-label">Photo</label>
+
+                    <div th:if="${venue != null and venue.photoUrl != null}" class="mb-2">
+                        <img th:src="${venue.photoUrl}" alt="Current photo"
+                             style="height:120px; object-fit:cover; border-radius:8px;"/>
+                        <p class="text-muted small mt-1">Current photo</p>
+                    </div>
+
+                    <label class="form-label small text-muted">Upload from device</label>
+                    <input type="file" name="photoFile" class="form-control mb-2" accept="image/*"/>
+
+                    <label class="form-label small text-muted">Or paste an image URL</label>
                     <input type="text" name="photoUrl" class="form-control"
-                           th:value="${venue?.photoUrl}"/>
+                           th:value="${venue?.photoUrl}" placeholder="https://..."/>
                 </div>
                 <div class="row">
                     <div class="col mb-3">

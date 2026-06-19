@@ -5,6 +5,7 @@ import com.heartsync.model.Venue;
 import com.heartsync.repository.VenueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -28,6 +29,29 @@ public class VenueService {
     }
 
     public Venue save(Venue venue) {
+        return venueRepository.save(venue);
+    }
+
+    public Venue saveWithImage(String name, String description, String category,
+                               String photoUrl, MultipartFile photoFile,
+                               Double latitude, Double longitude,
+                               FileUploadService fileUploadService) {
+
+        String finalPhotoUrl = photoUrl;
+
+        if (photoFile != null && !photoFile.isEmpty()) {
+            finalPhotoUrl = fileUploadService.store(photoFile);
+        }
+
+        Venue venue = Venue.builder()
+                .name(name)
+                .description(description)
+                .category(category)
+                .photoUrl(finalPhotoUrl)
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
+
         return venueRepository.save(venue);
     }
 

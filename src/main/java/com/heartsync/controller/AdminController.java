@@ -2,6 +2,7 @@ package com.heartsync.controller;
 
 import com.heartsync.model.Venue;
 import com.heartsync.model.VenueSuggestion;
+import com.heartsync.service.FileUploadService;
 import com.heartsync.service.UserService;
 import com.heartsync.service.VenueService;
 import com.heartsync.service.VenueSuggestionService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/admin")
@@ -18,6 +20,7 @@ public class AdminController {
     private final UserService userService;
     private final VenueService venueService;
     private final VenueSuggestionService suggestionService;
+    private final FileUploadService fileUploadService;
 
     @GetMapping
     public String adminDashboard(Model model) {
@@ -60,18 +63,12 @@ public class AdminController {
     public String createVenue(@RequestParam String name,
                               @RequestParam String description,
                               @RequestParam String category,
-                              @RequestParam String photoUrl,
+                              @RequestParam(required = false) String photoUrl,
+                              @RequestParam(required = false) MultipartFile photoFile,
                               @RequestParam Double latitude,
                               @RequestParam Double longitude) {
-        Venue venue = Venue.builder()
-                .name(name)
-                .description(description)
-                .category(category)
-                .photoUrl(photoUrl)
-                .latitude(latitude)
-                .longitude(longitude)
-                .build();
-        venueService.save(venue);
+        venueService.saveWithImage(name, description, category,
+                photoUrl, photoFile, latitude, longitude, fileUploadService);
         return "redirect:/admin/venues";
     }
 
@@ -86,16 +83,21 @@ public class AdminController {
                             @RequestParam String name,
                             @RequestParam String description,
                             @RequestParam String category,
-                            @RequestParam String photoUrl,
+                            @RequestParam(required = false) String photoUrl,
+                            @RequestParam(required = false) MultipartFile photoFile,
                             @RequestParam Double latitude,
                             @RequestParam Double longitude) {
         Venue venue = venueService.getById(id);
         venue.setName(name);
         venue.setDescription(description);
         venue.setCategory(category);
-        venue.setPhotoUrl(photoUrl);
-        venue.setLatitude(latitude);
-        venue.setLongitude(longitude);
+
+        if (photoFile != null && !photoFile.isEmpty()) {
+            venue.setPhotoUrl(fileUploadService.store(photoFile));
+        } else if (photoUrl != null && !photoUrl.isBlank()) {
+            venue.setPhotoUrl(photoUrl);
+        }
+
         venueService.save(venue);
         return "redirect:/admin/venues";
     }

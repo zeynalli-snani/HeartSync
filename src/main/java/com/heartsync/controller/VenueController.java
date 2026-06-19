@@ -2,15 +2,13 @@ package com.heartsync.controller;
 
 import com.heartsync.model.User;
 import com.heartsync.model.Venue;
-import com.heartsync.service.UserService;
-import com.heartsync.service.VenueService;
-import com.heartsync.service.VenueSuggestionService;
-import com.heartsync.service.WishlistService;
+import com.heartsync.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
@@ -24,6 +22,7 @@ public class VenueController {
     private final VenueSuggestionService suggestionService;
     private final WishlistService wishlistService;
     private final UserService userService;
+    private final FileUploadService fileUploadService;
 
     private User getCurrentUser(Authentication auth) {
         return userService.getByUsername(auth.getName());
@@ -58,12 +57,14 @@ public class VenueController {
     public String submitSuggestion(@RequestParam String name,
                                    @RequestParam String description,
                                    @RequestParam String category,
-                                   @RequestParam String photoUrl,
+                                   @RequestParam(required = false) String photoUrl,
+                                   @RequestParam(required = false) MultipartFile photoFile,
                                    @RequestParam Double latitude,
                                    @RequestParam Double longitude,
                                    Authentication auth) {
         User user = getCurrentUser(auth);
-        suggestionService.submit(name, description, category, photoUrl, latitude, longitude, user);
+        suggestionService.submit(name, description, category,
+                photoUrl, photoFile, latitude, longitude, user, fileUploadService);
         return "redirect:/map?suggested";
     }
 

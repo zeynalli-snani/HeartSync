@@ -9,7 +9,7 @@
         <div class="col-md-6">
             <h2 class="mb-4">Suggest a Venue</h2>
             <p class="text-muted">Your suggestion will be reviewed by an admin before appearing on the map.</p>
-            <form th:action="@{/venues/suggest}" method="post">
+            <form th:action="@{/venues/suggest}" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label class="form-label">Name</label>
                     <input type="text" name="name" class="form-control" required/>
@@ -23,8 +23,14 @@
                     <textarea name="description" class="form-control" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Photo URL</label>
-                    <input type="text" name="photoUrl" class="form-control"/>
+                    <label class="form-label">Photo</label>
+
+                    <label class="form-label small text-muted">Upload from device</label>
+                    <input type="file" name="photoFile" class="form-control mb-2" accept="image/*"/>
+
+                    <label class="form-label small text-muted">Or paste an image URL</label>
+                    <input type="text" name="photoUrl" class="form-control"
+                           placeholder="https://..."/>
                 </div>
                 <div class="row">
                     <div class="col mb-3">
