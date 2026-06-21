@@ -73,6 +73,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public String handleGeneric(Exception ex, Model model) {
+        ex.printStackTrace();
         model.addAttribute("status", 500);
         model.addAttribute("error", "Something went wrong");
         model.addAttribute("message", "An unexpected error occurred. Please try again.");

@@ -25,7 +25,7 @@ public class VenueService {
                 .orElseThrow(() -> new ResourceNotFoundException("Venue not found"));
     }
 
-    public List<Venue> getByCategory(String category) {
+    public List<Venue> getByCategory(VenueCategory category) {
         return venueRepository.findByCategory(category);
     }
 
