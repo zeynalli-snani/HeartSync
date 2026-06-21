@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/plans")
@@ -31,6 +33,15 @@ public class PlanController {
         User user = getCurrentUser(auth);
         model.addAttribute("plans", planService.getPlansForUser(user));
         return "plans/list";
+    }
+
+    @GetMapping("/my-plans-json")
+    @ResponseBody
+    public List<Map<String, Object>> myPlansJson(Authentication auth) {
+        User user = getCurrentUser(auth);
+        return planService.getPlansForUser(user).stream()
+                .map(p -> Map.<String, Object>of("id", p.getId(), "title", p.getTitle()))
+                .toList();
     }
 
     @GetMapping("/new")
@@ -110,6 +121,16 @@ public class PlanController {
                           @RequestParam String timeSlot) {
         planService.addStop(id, venueId, timeSlot);
         return "redirect:/plans/" + id;
+    }
+
+    @PostMapping("/add-venue")
+    public String addVenueDirectly(@RequestParam Long planId,
+                                 @RequestParam Long venueId,
+                                 @RequestParam String timeSlot,
+                                 @RequestParam(required = false) String redirectTo,
+                                 Authentication auth) {
+        planService.addStop(planId, venueId, timeSlot);
+        return "redirect:" + (redirectTo != null && !redirectTo.isBlank() ? redirectTo : "/plans/" + planId);
     }
 
     @PostMapping("/{id}/stops/add-custom")

@@ -17,10 +17,16 @@
                     <h5 class="card-title" th:text="${entry.venue.name}"></h5>
                     <p class="text-muted small" th:text="${entry.venue.category}"></p>
                     <p class="card-text small" th:text="${entry.venue.description}"></p>
-                    <form th:action="@{/wishlist/remove}" method="post">
-                        <input type="hidden" name="venueId" th:value="${entry.venue.id}"/>
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
-                    </form>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-dark"
+                                th:attr="onclick=|openAddToPlanModal(${entry.venue.id}, '${entry.venue.name}')|">
+                            Add to Plan
+                        </button>
+                        <form th:action="@{/wishlist/remove}" method="post">
+                            <input type="hidden" name="venueId" th:value="${entry.venue.id}"/>
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

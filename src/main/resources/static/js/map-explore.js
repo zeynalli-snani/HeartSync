@@ -56,6 +56,8 @@ function createPopupMarkup(venue) {
         ? `<img src="${venue.photoUrl}" alt="${venue.name}" style="width:100%; border-radius:6px; margin-bottom:8px; object-fit:cover; max-height:120px;"/>`
         : '';
 
+    const safeName = (venue.name || '').replace(/'/g, "\\'");
+
     return `
         <div style="min-width:200px">
             <div style="display:flex; align-items:center; gap:6px; margin-bottom:4px;">
@@ -65,7 +67,11 @@ function createPopupMarkup(venue) {
             <h6 style="margin:0 0 6px 0;">${venue.name || 'Unknown Venue'}</h6>
             <p style="font-size:12px; color:#555; margin:0 0 8px 0;">${venue.description || ''}</p>
             ${imageHtml}
-            <form action="/wishlist/add" method="post">
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-dark w-100"
+                        onclick="openAddToPlanModal(${venue.id}, '${safeName}')">Add to Plan</button>
+            </div>
+            <form action="/wishlist/add" method="post" class="mt-2">
                 <input type="hidden" name="_csrf" value="${csrf}"/>
                 <input type="hidden" name="venueId" value="${venue.id}"/>
                 <button class="btn btn-sm btn-outline-dark w-100">Save to Wishlist</button>
